@@ -108,7 +108,7 @@ aws sts get-caller-identity
 export AWS_DEFAULT_REGION=us-west-2
 export AWS_REGION=us-west-2
 export CLUSTER_NAME=madday
-echo "export ClUSTER_NAME=${CLUSTER_NAME}" >> ~/.bashrc
+echo "export CLUSTER_NAME=${CLUSTER_NAME}" >> ~/.bashrc
 echo "export AWS_REGION=${AWS_REGION}" >> ~/.bashrc
 echo "export AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}" >> ~/.bashrc
 
