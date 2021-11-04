@@ -107,8 +107,8 @@ aws sts get-caller-identity
 #设置默认region
 export AWS_DEFAULT_REGION=us-west-2
 export AWS_REGION=us-west-2
-export ClUSTER_NAME=madday
-echo "export ClUSTER_NAME=${ClUSTER_NAME}" >> ~/.bashrc
+export CLUSTER_NAME=madday
+echo "export ClUSTER_NAME=${CLUSTER_NAME}" >> ~/.bashrc
 echo "export AWS_REGION=${AWS_REGION}" >> ~/.bashrc
 echo "export AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}" >> ~/.bashrc
 
@@ -124,6 +124,9 @@ sudo mv ./kubectl /usr/local/bin
 #安装jq
 sudo yum install -y jq
 
+#安装helm
+curl -sSL https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+
 ```
 
 >检查工具的版本 eksctl (版本>=0.54.0), kubectl(版本>=1.20)
@@ -131,6 +134,7 @@ sudo yum install -y jq
 ```bash
 eksctl version
 kubectl version
+helm version --short
 ```
 
 > 下载所需要的配置文件到本地
