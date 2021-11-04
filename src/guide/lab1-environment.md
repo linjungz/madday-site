@@ -17,7 +17,7 @@ AWS Cloud9 为您提供了EC2基础设施资源并且一个可视化的编辑器
 
 ### 创建 Cloud9 开发环境 
 
-打开AWS管理控制台，在Service菜单栏中输入关键字Cloud9，进入Cloud9 管理页面
+打开AWS管理控制台，在屏幕右上角的区域下拉列表中确认当前区域是**Oregon（us-west-2）**，在Service菜单栏中输入关键字Cloud9，进入Cloud9 管理页面
 ![](./media/15764751257913/15764752078709.jpg?raw=true")
 
 
@@ -66,7 +66,7 @@ Cloud9 通常使用动态生成 IAM 的认证授权信息，但目前和 EKS IAM
 在EC2 Instances界面选择cloud9的EC2实例(名字为aws-cloud9-xxxxx),点击Actions/Instance Settings/Attach/Replace IAM Role,为该实例设置正确的角色
 
   ![](./media/15764751257913/1576503061.png)
-  
+
 >   选择eksworkshop-admin 角色,点击Apply完成
 
 ![](./media/15764751257913/15764754031465.png)
@@ -106,6 +106,10 @@ aws sts get-caller-identity
 ```bash
 #设置默认region
 export AWS_DEFAULT_REGION=us-west-2
+export AWS_REGION=us-west-2
+export ClUSTER_NAME=madday
+echo "export ClUSTER_NAME=${ClUSTER_NAME}" >> ~/.bashrc
+echo "export AWS_REGION=${AWS_REGION}" >> ~/.bashrc
 echo "export AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}" >> ~/.bashrc
 
 #eksctl 版本 > v0.62.0

@@ -1,5 +1,93 @@
 # 部署应用
 
+## 在AWS Load Balancer上发布服务
+
+### 部署nginx应用
+
+```bash
+cat <<EoF > ~/environment/run-my-nginx.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-nginx
+  namespace: my-nginx
+spec:
+  selector:
+    matchLabels:
+      run: my-nginx
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        run: my-nginx
+    spec:
+      containers:
+      - name: my-nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+EoF
+
+# 创建命名空间
+kubectl create ns my-nginx
+# 部署应用
+kubectl -n my-nginx apply -f ~/environment/run-my-nginx.yaml
+kubectl -n my-nginx get pods -o wide
+```
+
+查看Pod IP
+
+```bash
+kubectl -n my-nginx get pods -o yaml | grep 'podIP:'
+```
+
+发布服务
+
+```bash
+kubectl -n my-nginx expose deployment/my-nginx
+```
+
+查看服务类型（ClusterIP）及终端节点（Endpoints）
+
+```bash
+kubectl -n my-nginx describe svc my-nginx
+```
+
+将服务类型从默认的ClusterIP修改为LoadBalancer
+
+```bash
+kubectl -n my-nginx patch svc my-nginx -p '{"spec": {"type": "LoadBalancer"}}'
+kubectl -n my-nginx get svc my-nginx
+```
+
+查看服务类型
+
+```bash
+kubectl -n my-nginx get svc my-nginx
+```
+
+上述命令将my-nginx服务发布在AWS Classic Load Balancer（CLB）上，CLB的创建需要等待30秒钟左右，可以在控制台的EC2服务的负载均衡器页面查看刚刚创建的CLB。创建完毕后可以通过CLB外部域名访问服务
+
+```bash
+export loadbalancer=$(kubectl -n my-nginx get svc my-nginx -o jsonpath='{.status.loadBalancer.ingress[*].hostname}')
+
+curl -k -s http://${loadbalancer} | grep title
+```
+
+返回Welcome to nginx!表示实验成功。
+
+## 在AWS Load Balancer上发布Ingress
+
+#### 创建 IAM OIDC provider
+
+```bash
+eksctl utils associate-iam-oidc-provider \
+    --cluster=$CLUSTER_NAME \
+    --approve
+```
+
+#### 
+
 ## 安装 AWS Load Balancer Controller
 
 ### 准备权限
@@ -22,7 +110,7 @@ curl -o iam_policy.json https://raw.githubusercontent.com/kubernetes-sigs/aws-lo
 ```
 aws iam create-policy \
     --policy-name AWSLoadBalancerControllerIAMPolicy \
-    --policy-document file://iam-policy.json
+    --policy-document file://iam_policy.json
 ```
 
 记录创建出来的 policy 的 arn, 在接下来的命令可以用上。
@@ -30,18 +118,28 @@ aws iam create-policy \
 ### 创建 IAM Role 和 ServiceAccount 
 
 更新如下命令参数指定的 policy arn，并执行该命令创建 iam role 和 service account
+
 ```bash
+ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text)
+
 eksctl create iamserviceaccount \
        --cluster=$CLUSTER_NAME \
        --namespace=kube-system \
        --name=aws-load-balancer-controller \
-       --attach-policy-arn=arn:aws:iam::59********44:policy/AWSLoadBalancerControllerIAMPolicy \
+       --attach-policy-arn arn:aws:iam::${ACCOUNT_ID}:policy/AWSLoadBalancerControllerIAMPolicy \
        --override-existing-serviceaccounts \
        --approve
 ```
 
 
 ### 安装 aws-load-balancer-controller
+
+使用Helm工具作为安装aws-load-balancer-controller的工具
+
+```bash
+curl -sSL https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+helm version --short
+```
 
 接下来使用 Helm 来进行安装：
 
@@ -94,7 +192,7 @@ NAME           CLASS    HOSTS   ADDRESS                                         
 ingress-2048   <none>   *       k8s-game2048-ingress2-xxxxxxxxxx-yyyyyyyyyy.us-west-2.elb.amazonaws.com   80      2m32s
 ```
 
-从 ADDRESS 这一列可以看到 ALB 的地址，在浏览器中访问该地址即可查看部署的示例网站
+从 ADDRESS 这一列可以看到 ALB 的地址，等待30秒左右ALB创建成功后，在浏览器中访问该地址即可查看部署的示例网站
 
 ### 参考文档
 
