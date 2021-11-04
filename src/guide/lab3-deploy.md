@@ -1,8 +1,8 @@
-# 部署应用
+# 部署应用及发布服务
 
-## 在AWS Load Balancer上发布服务
+## 在EKS集群上发布Load Balancer服务
 
-### 部署nginx应用
+### 部署Nginx应用
 
 ```bash
 cat <<EoF > ~/environment/run-my-nginx.yaml
@@ -76,7 +76,7 @@ curl -k -s http://${loadbalancer} | grep title
 
 返回Welcome to nginx!表示实验成功。
 
-## 在AWS Load Balancer上发布Ingress
+## 在Application Load Balancer上发布Ingress
 
 #### 创建 IAM OIDC provider
 
@@ -88,7 +88,7 @@ eksctl utils associate-iam-oidc-provider \
 
 #### 
 
-## 安装 AWS Load Balancer Controller
+### 安装 AWS Load Balancer Controller
 
 ### 准备权限
 
@@ -173,7 +173,7 @@ aws-load-balancer-controller   2/2     2            2           84s
 
 
 
-### 部署示例应用
+### 部署示例应用及发布Ingress
 
 #### 部署
 
