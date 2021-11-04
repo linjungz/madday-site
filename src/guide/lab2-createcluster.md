@@ -11,7 +11,7 @@ apiVersion: eksctl.io/v1alpha5
 kind: ClusterConfig
 
 metadata:
-  name: ${ClUSTER_NAME}
+  name: ${CLUSTER_NAME}
   region: ${AWS_REGION}
   version: "1.19"
 
@@ -55,7 +55,7 @@ elif echo ${c9builder} | grep -q assumed-role; then
         echo Role ARN: ${rolearn}
 fi
 
-eksctl create iamidentitymapping --cluster ${ClUSTER_NAME} --arn ${rolearn} --group system:masters --username admin
+eksctl create iamidentitymapping --cluster ${CLUSTER_NAME} --arn ${rolearn} --group system:masters --username admin
   ```
 
 在控制台上查看EKS集群节点、网络、工作负载等信息。
