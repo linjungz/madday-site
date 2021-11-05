@@ -34,14 +34,14 @@ module.exports = {
     lastUpdated: false,
     nav: [
       {
-        text: 'Guide',
+        text: '实验手册',
         link: '/guide/',
       }
     ],
     sidebar: {
       '/guide/': [
         {
-          title: 'Guide',
+          title: '实验手册',
           collapsable: false,
           children: [
             'lab1-environment',
