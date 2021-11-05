@@ -45,8 +45,8 @@ module.exports = {
           collapsable: false,
           children: [
             'lab1-environment',
-            'lab2-createcluster',
-            'lab3-deploy'
+            'lab4-createcluster',
+            'lab5-deploy'
           ]
         }
       ],

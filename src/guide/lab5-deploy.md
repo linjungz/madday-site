@@ -1,4 +1,4 @@
-# 部署应用及发布服务
+# Lab5 EKS: 部署应用及发布服务
 
 ## 在EKS集群上发布Load Balancer服务
 
