@@ -1,4 +1,4 @@
-# Lab3 Serverless: 可观测性
+# Lab2 Serverless: 可观测性
 在本次实验中，您将通过Cloud9创建一个serverless样例应用，包含API Gateway, Lambda, DynamoDB, SNS等服务。
 
 ## 部署样例应用
